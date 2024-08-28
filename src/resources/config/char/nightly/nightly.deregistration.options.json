@@ -1,0 +1,111 @@
+{
+    "scenarios": {
+        "cmHandleCleanup": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "cmHandleCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "gnbduTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "gnbduCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "nrcellTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "nrcellCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "nrsectorcarrierTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "nrsectorcarrierCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "gnbcuupTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "gnbcuupCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "gnbcucpTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "gnbcucpCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "enodebTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "enodebCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        },
+        "ltecellTopologyDeregistration": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "ltecellCTSCleanup",
+            "env": {
+                "cleanupTimeout" : "80"
+            }
+        }
+    },
+    "thresholds": {
+        "cmHandleCleanup": [
+            "count <= 80"
+        ],
+        "gnbduTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "nrcellTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "nrsectorcarrierTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "gnbcuupTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "gnbcucpTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "enodebTopologyDeregistration": [
+            "count <= 80"
+        ],
+        "ltecellTopologyDeregistration": [
+            "count <= 80"
+        ]
+    },
+    "setupTimeout": "10m"
+}

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: ${name}
+description: Testware for application eric-oss-eas-app-engineering
+type: application
+version: ${version}
+dependencies:
+  - condition: eric-eo-enm-stub-for-app-eng.enabled
+    name: eric-eo-enm-stub
+    repository: https://arm.sero.gic.ericsson.se/artifactory/proj-so-gs-all-helm
+    version: '>=2.0.0-88'
+    alias: eric-eo-enm-stub-for-app-eng
+  - condition: eric-oss-restsim-release-for-app-eng.enabled
+    name: eric-oss-restsim-release
+    repository: https://arm.seli.gic.ericsson.se/artifactory/proj-eric-oss-restsim-drop-helm-local
+    version: '>=1.0.0-137'
+    alias: eric-oss-restsim-release-for-app-eng

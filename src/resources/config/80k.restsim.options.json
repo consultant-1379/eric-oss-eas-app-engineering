@@ -1,0 +1,200 @@
+{
+  "scenarios": {
+    "cmHandleDiscoveryurl1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "exec": "cmHandleDiscovery",
+      "maxDuration": "80m",
+      "env": {
+        "restsim_url_tag": "url1"
+      }
+    },
+    "cmHandleDiscoveryBase": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "exec": "cmHandleDiscovery",
+      "startTime": "5s",
+      "maxDuration": "80m",
+      "env": {}
+    },
+    "TopologyDiscovery_gnbdu_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "gnbdu",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_gnbcucp_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "gnbcucp",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_gnbcuup_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "gnbcuup",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_nrcell_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "nrcell",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_nrsectorcarrier_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "nrsectorcarrier",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_enodeb_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "enodeb",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscovery_ltecell_base": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscovery",
+      "startTime": "10s",
+      "env": {
+        "celltype": "ltecell",
+        "filter": "_sim_tic"
+      }
+    },
+    "TopologyDiscoveryPE_gnbdu_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "gnbdu",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_gnbcucp_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "gnbcucp",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_gnbcuup_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "gnbcuup",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_nrcell_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "nrcell",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_nrsectorcarrier_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "nrsectorcarrier",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_enodeb_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "enodeb",
+        "filter": "_80k_sim"
+      }
+    },
+    "TopologyDiscoveryPE_ltecell_url1": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "110m",
+      "exec": "TopologyDiscoveryPE",
+      "startTime": "10s",
+      "env": {
+        "restsim_url_tag": "url1",
+        "celltype": "ltecell",
+        "filter": "_80k_sim"
+      }
+    }
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m"
+}

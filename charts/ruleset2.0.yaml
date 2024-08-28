@@ -1,0 +1,41 @@
+modelVersion: 2.0
+description: "Groot: eas k6 testsuite Pipeline"
+docker-images:
+  - bob-py3-kube-helm-builder: armdocker.rnd.ericsson.se/proj-adp-cicd-drop/bob-py3kubehelmbuilder:latest
+  - ci-toolbox: armdocker.rnd.ericsson.se/proj-eea-drop/ci-toolbox:0.0.0-46
+properties:
+  - testsuite-dir: .
+  - testsuite-image-name: k6-eas-testsuite
+  - kube-config-path: ./admin.conf
+env:
+  - PWD
+  - HOME
+  - KUBECONFIG (default=${env.HOME}/.kube/config)
+  - NAMESPACE
+  - DOCKER_NETWORK (default=--network host)
+
+var:
+  - helm-chart-directory
+rules:
+  test-rule:
+    - task: test-rule
+      cmd: docker image ls
+  deploy-testsuite:
+    - task: deploy-testsuite
+      cmd: ${env.PWD}/eas-k6-functional/scripts/deployK6Pod.sh ${kube-config-path} ${env.NAMESPACE} ${env.PWD}
+  copy-testsuite-report:
+    - task: copy-testsuite-report
+      cmd: ${env.PWD}/eas-k6-functional/scripts/copyK6Report.sh ${kube-config-path} ${env.NAMESPACE} ${env.PWD}
+  build-testsuite-image:
+    - task: docker-build
+      cmd: docker build ${env.PWD}/${testsuite-dir}
+        --tag ${testsuite-image-name}:latest
+  k8s-logs:
+    - task: run-collect-adp-logs
+      docker-image: ci-toolbox
+      docker-flags:
+        - ${env.DOCKER_NETWORK}
+        - "--env KUBECONFIG=${env.PWD}/admin.conf"
+        - "--volume ${env.PWD}:${env.PWD}"
+        - "--workdir ${env.PWD}"
+      cmd: /usr/local/bin/collect_ADP_logs.sh ${env.NAMESPACE}

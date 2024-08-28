@@ -1,0 +1,247 @@
+# COPYRIGHT Ericsson 2021
+# The copyright to the computer program(s) herein is the property of
+# Ericsson Inc. The programs may be used and/or copied only with written
+# permission from Ericsson Inc. or in accordance with the terms and
+# conditions stipulated in the agreement/contract under which the
+# program(s) have been supplied.
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: eas-k6-testsuite
+  labels:
+    app: eas-k6
+    sidecar.istio.io/inject: 'true'
+  annotations:
+    proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+spec:
+  containers:
+    - name: eas-k6
+      env:
+        - name: THERE_IS_NO_TH_DEPL
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: TH_DISABLED
+        - name: GAS_HOST_FROM_DEPLOY_SH
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: GAS_HOST
+        - name: IAM_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: IAM_HOST
+        - name: GENERATE_RESPONSES
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: GEN_RESP
+        - name: GENERATED_QUANTITY
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: GEN_VALUE
+        - name: NODETYPES
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: DISCOVERY_NODE_TYPES
+        - name: RESTSIM_URL1
+          value: ''
+        - name: RESTSIM_URL2
+          value: ''
+        - name: ENM_HOSTNAME
+          value: 'stsossflexcenm2001-36598.stsoss.seli.gic.ericsson.se'
+        - name: ENM_CERTS_DIR
+          value: '../enm_certs/'
+        - name: CHAR_TEST_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: CHAR_TEST_TYPE
+        - name: OPTIONS_FILE
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-configmap
+              key: OPTIONS_FILE
+        - name: SYS_USER
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user
+        - name: SYS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user-pwd
+      volumeMounts:
+        - name: eas-k6-src-volume
+          mountPath: '/home/k6'
+        - name: dir-for-reports
+          mountPath: '/reports'
+      image: armdocker.rnd.ericsson.se/dockerhub-ericsson-remote/loadimpact/k6:sha256__993b112cde83926a3594befd7a374a6023ad70559c5a7230a14cc10aed8ed7c0
+      command: ['/bin/sh']
+      args: ['runK6EAS-local.sh']
+      imagePullPolicy: Always
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: true
+        runAsNonRoot: false
+        runAsUser: 0
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+  volumes:
+    - name: dir-for-reports
+    - name: eas-k6-src-volume
+      configMap:
+        name: eas-k6-configmap
+        items:
+          - key: 'eas-test'
+            path: 'main.js'
+          - key: 'eas-const'
+            path: 'utility/constants.js'
+          - key: 'eas-cm'
+            path: 'use-cases/Functional/cmHandleDiscovery.js'
+          - key: 'eas-event'
+            path: 'use-cases/Functional/eventPolling.js'
+          - key: 'eas-t4'
+            path: 'use-cases/Functional/EAS_4.js'
+          - key: 'eas-t5'
+            path: 'use-cases/Functional/EAS_5.js'
+          - key: 'eas-t6'
+            path: 'use-cases/Functional/EAS_6.js'
+          - key: 'eas-t7'
+            path: 'use-cases/Functional/EAS_7.js'
+          - key: 'eas-t8'
+            path: 'use-cases/Functional/EAS_8.js'
+          - key: 'eas-t9'
+            path: 'use-cases/Functional/EAS_9.js'
+          - key: 'eas-t10'
+            path: 'use-cases/Functional/EAS_10.js'
+          - key: 'eas-t11'
+            path: 'use-cases/Functional/EAS_11.js'
+          - key: 'eas-t12'
+            path: 'use-cases/Functional/EAS_12.js'
+          - key: 'eas-t13'
+            path: 'use-cases/Functional/EAS_13.js'
+          - key: 'eas-t14'
+            path: 'use-cases/Functional/EAS_14.js'
+          - key: 'eas-t15'
+            path: 'use-cases/Functional/EAS_15.js'
+          - key: 'eas-t16'
+            path: 'use-cases/Functional/EAS_16.js'
+          - key: 'eas-t17'
+            path: 'use-cases/Functional/EAS_17.js'
+          - key: 'eas-t18'
+            path: 'use-cases/Functional/EAS_18.js'
+          - key: 'eas-t19'
+            path: 'use-cases/Functional/EAS_19.js'
+          - key: 'eas-t20'
+            path: 'use-cases/Functional/EAS_20.js'
+          - key: 'eas-hash'
+            path: 'utility/hash.js'
+          - key: 'eas-gat-1'
+            path: 'use-cases/GAT/Gat_3_1.js'
+          - key: 'eas-gat-2'
+            path: 'use-cases/GAT/Gat_3_2.js'
+          - key: 'eas-gat-3'
+            path: 'use-cases/GAT/Gat_3_3.js'
+          - key: 'eas-gat-4'
+            path: 'use-cases/GAT/Gat_3_4.js'
+          - key: 'eas-gat-5'
+            path: 'use-cases/GAT/Gat_3_5.js'
+          - key: 'eas-gat-cleanup'
+            path: 'use-cases/GAT/Gat_Cleanup.js'
+          - key: 'nf-t1'
+            path: 'use-cases/Non-Functional/NF_1.js'
+          - key: 'nf-t2'
+            path: 'use-cases/Non-Functional/NF_2.js'
+          - key: 'nf-t3'
+            path: 'use-cases/Non-Functional/NF_3.js'
+          - key: 'nf-t4'
+            path: 'use-cases/Non-Functional/NF_4.js'
+          - key: 'nf-t5'
+            path: 'use-cases/Non-Functional/NF_5.js'
+          - key: 'nf-t6'
+            path: 'use-cases/Non-Functional/NF_6.js'
+          - key: 'nf-t7'
+            path: 'use-cases/Non-Functional/NF_7.js'
+          - key: 'nf-t8'
+            path: 'use-cases/Non-Functional/NF_8.js'
+          - key: 'nf-t9'
+            path: 'use-cases/Non-Functional/NF_9.js'
+          - key: 'char1'
+            path: 'characteristicsTests.js'
+          - key: 'char2'
+            path: 'use-cases/Non-Functional/CRUDOperations.js'
+          - key: 'char3'
+            path: 'runK6EASChar.sh'
+          - key: 'char5'
+            path: 'use-cases/Non-Functional/CRUDOperationsChar.js'
+          - key: 'char6'
+            path: 'resources/radioNodes/80k_radioNodes.json'
+          - key: 'char7'
+            path: 'resources/radioNodes/nightly_radioNodes.json'
+          - key: 'cert1'
+            path: 'enm_certs/stsvp9enm08-138.stsoss.seli.gic.ericsson.se.txt'
+          - key: 'cert2'
+            path: 'enm_certs/enmcnis-n297p1.sero.gic.ericsson.se.txt'
+          - key: 'cert3'
+            path: 'enm_certs/n124cnisenm01.sc.seli.gic.ericsson.se.txt'
+          - key: 'cert4'
+            path: 'enm_certs/stsossflexcenm2001-36598.stsoss.seli.gic.ericsson.se.txt'
+          - key: 'crud-base'
+            path: 'use-cases/Non-Functional/CRUDBase.js'
+          - key: 'run-k6'
+            path: 'runK6EAS-local.sh'
+          - key: 'eas-utility'
+            path: 'utility/utility.js'
+          - key: 'eas-describe'
+            path: 'utility/describe.js'
+          - key: 'eas-ajv'
+            path: 'utility/ajv.js'
+          - key: 'def-scen'
+            path: 'default.options.json'
+          - key: 'enm-ma'
+            path: 'use-cases/Non-Functional/ENMModelAdapterMetrics.js'
+          - key: 'enm-na'
+            path: 'use-cases/Non-Functional/ENMNotificationAdapterMetrics.js'
+          - key: 'nightly-opts-crud-1'
+            path: 'resources/config/char/crud/ncmp/nightly/create.crud.options.json'
+          - key: 'nightly-opts-crud-2'
+            path: 'resources/config/char/crud/ncmp/nightly/read.cell.crud.options.json'
+          - key: 'nightly-opts-crud-3'
+            path: 'resources/config/char/crud/ncmp/nightly/read.dufunction.crud.options.json'
+          - key: 'nightly-opts-crud-4'
+            path: 'resources/config/char/crud/ncmp/nightly/update.crud.options.json'
+          - key: 'nightly-opts-crud-5'
+            path: 'resources/config/char/crud/ncmp/nightly/delete.crud.options.json'
+          - key: 'nightly-opts-disco'
+            path: 'resources/config/char/nightly/nightly.options.json'
+          - key: 'nightly-opts-dereg'
+            path: 'resources/config/char/nightly/nightly.deregistration.options.json'
+          - key: 'nightly-opts-events'
+            path: 'resources/config/char/nightly/nightly.events.options.json'
+          - key: '80k-opts-crud-1'
+            path: 'resources/config/char/crud/ncmp/80k/create.crud.options.json'
+          - key: '80k-opts-crud-2'
+            path: 'resources/config/char/crud/ncmp/80k/read.cell.crud.options.json'
+          - key: '80k-opts-crud-3'
+            path: 'resources/config/char/crud/ncmp/80k/read.dufunction.crud.options.json'
+          - key: '80k-opts-crud-4'
+            path: 'resources/config/char/crud/ncmp/80k/update.crud.options.json'
+          - key: '80k-opts-crud-5'
+            path: 'resources/config/char/crud/ncmp/80k/delete.crud.options.json'
+          - key: '80k-opts-disco'
+            path: 'resources/config/char/80k/80k.options.json'
+          - key: '80k-opts-dereg'
+            path: 'resources/config/char/80k/80k.deregistration.options.json'
+  dnsPolicy: ClusterFirst
+  imagePullSecrets:
+    - name: k8s-registry-secret
+  schedulerName: default-scheduler
+  restartPolicy: Never
+  securityContext: {}
+  terminationGracePeriodSeconds: 10

@@ -1,0 +1,35 @@
+#
+# COPYRIGHT Ericsson 2023
+#
+#
+#
+# The copyright to the computer program(s) herein is the property of
+#
+# Ericsson Inc. The programs may be used and/or copied only with written
+#
+# permission from Ericsson Inc. or in accordance with the terms and
+#
+# conditions stipulated in the agreement/contract under which the
+#
+# program(s) have been supplied.
+#
+
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaTopic
+metadata:
+  name: k6-batch
+  labels:
+    strimzi.io/cluster: eric-oss-dmm-kf-op-sz
+    app.kubernetes.io/name: "eric-oss-eas-app-engineering"
+    app.kubernetes.io/instance: "eric-oss-eas-app-engineering"
+    app.kubernetes.io/managed-by: "eric-oss-eas-app-engineering"
+    app.kubernetes.io/version: "0.1.0"
+    helm.sh/chart: "eric-oss-eas-app-engineering"
+  annotations:
+    ericsson.com/product-name: "OSS EAS App Engineering"
+    ericsson.com/product-number: "N/A"
+    ericsson.com/product-revision: "R1A"
+spec:
+  topicName: k6-batch
+  config:
+    retention.ms: "7200000"

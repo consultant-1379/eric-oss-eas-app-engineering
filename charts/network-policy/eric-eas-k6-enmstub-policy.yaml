@@ -1,0 +1,22 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: eric-eas-k6-enmstub-policy
+spec:
+  podSelector:
+    matchLabels:
+      app: eric-eo-enm-stub
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            app: eas-k6
+      - podSelector:
+          matchLabels:
+            app: eric-pm-server
+      - podSelector:
+          matchLabels:
+            app: eric-eo-enm-adapter
+      - podSelector:
+          matchLabels:
+            app: eric-oss-enm-notification-simulator

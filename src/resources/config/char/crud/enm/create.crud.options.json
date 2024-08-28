@@ -1,0 +1,16 @@
+{
+  "scenarios": {
+    "createOperationENM": {
+      "executor": "per-vu-iterations",
+      "vus": 24,
+      "iterations": 40,
+      "maxDuration": "30m",
+      "exec": "createCRUDOperationENM",
+      "env": {
+        "its": "40"
+      }
+    }
+  },
+  "setupTimeout": "10m",
+  "teardownTimeout": "10m"
+}

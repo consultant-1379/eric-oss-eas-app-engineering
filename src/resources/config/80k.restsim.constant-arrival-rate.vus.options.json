@@ -1,0 +1,24 @@
+{
+  "scenarios": {
+    "CUDop": {
+      "executor": "constant-arrival-rate",
+      "duration": "10m",
+      "rate": 13,
+      "preAllocatedVUs": 10,
+      "timeUnit": "1s",
+      "startTime": "30s",
+      "exec": "CUDop_80k"
+    },
+    "READop": {
+      "executor": "constant-arrival-rate",
+      "duration": "10m",
+      "rate": 25,
+      "preAllocatedVUs": 10,
+      "timeUnit": "1s",
+      "startTime": "30s",
+      "exec": "READop_80k"
+    }
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m"
+}

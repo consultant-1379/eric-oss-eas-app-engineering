@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "deleteOperation": {
+      "executor": "per-vu-iterations",
+      "vus": 20,
+      "iterations": 25,
+      "maxDuration": "80m",
+      "exec": "deleteCRUDOperation",
+      "env": {
+        "its": "25"
+      }
+    }
+  },
+  "thresholds": {
+    "deleteOperationSuccessful": [
+      "avg <= 1350"
+    ]
+  },
+  "setupTimeout": "10m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)", "count"]
+}

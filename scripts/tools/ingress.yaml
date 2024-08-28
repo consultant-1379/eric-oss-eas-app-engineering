@@ -1,0 +1,31 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: eric-oss-restsim-release
+  labels:    
+    app.kubernetes.io/instance: "release-name"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "eric-oss-restsim-release"
+    app.kubernetes.io/version: "1.0.0-113"
+    helm.sh/chart: "eric-oss-restsim-release-1.0.0-113"
+  annotations:    
+    ericsson.com/product-name: "eric-oss-restsim-release"
+    ericsson.com/product-number: "CXP 904 3314"
+    ericsson.com/product-revision: "1.0.0"
+    kubectl.kubernetes.io/default-container: restsim
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "2112"
+    prometheus.io/path: "/metrics"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: "restsim.hart147-x7.ews.gic.ericsson.se"
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: eric-oss-restsim-release
+                port:
+                  number: 80

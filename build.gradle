@@ -1,0 +1,113 @@
+plugins {
+    id 'net.researchgate.release' version '2.8.1'
+}
+
+apply from: "gradle/modules/documentation.gradle"
+apply from: "gradle/modules/docker.gradle"
+apply from: "gradle/modules/helm.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+/*
+ * Configures the release plugin.
+ * The release requires to be run on the master branch and will be pushed to the remote origin (Gerrit)
+ */
+release {
+    git {
+        requireBranch = "master"
+        pushToRemote = 'origin'
+    }
+}
+
+helm{
+    repositories{
+        dropHelmLocal {
+            url = uri("https://arm.seli.gic.ericsson.se/artifactory/proj-eric-oss-drop-helm-local")
+            credentials{
+                username = "testautoci"
+                password = "&SmgE!!RJ87joL7T"
+            }
+        }
+        gsAllHelm {
+            url = uri("https://arm.sero.gic.ericsson.se/artifactory/proj-so-gs-all-helm")
+            credentials{
+                username = "testautoci"
+                password = "&SmgE!!RJ87joL7T"
+            }
+        }
+        gsAdpAllHelm {
+            url = uri("https://arm.sero.gic.ericsson.se/artifactory/proj-adp-gs-all-helm")
+            credentials{
+                username = "testautoci"
+                password = "&SmgE!!RJ87joL7T"
+            }
+        }
+        dropHelmLocalRestsim {
+            url = uri("https://arm.seli.gic.ericsson.se/artifactory/proj-eric-oss-restsim-drop-helm-local")
+            credentials{
+                username = "testautoci"
+                password = "&SmgE!!RJ87joL7T"
+            }
+        }
+    }
+}
+
+task clean(type:Delete) {
+    group = "clean"
+    description = "Clear resources created by previous builds"
+    delete buildDir
+}
+
+/**
+ * The build task is a placeholder, on which the dependencies are attached
+ * see build.dependsOn at the end of the file
+ */
+task build(dependsOn: [buildDocumentation, buildDockerImage, packageDocs]) {
+    group = "build"
+    description = "Build the packages"
+    print "Running build"
+}
+
+task createVersionFile() {
+    group = "build setup"
+    description = "generate the version file used by ADP"
+    buildVersionFile()
+}
+
+task run(dependsOn: logQuickRunContainer) {
+    group = "run"
+    description = "Run the tests using the generated docker image"
+}
+
+task deploy(dependsOn: ["package", helmInstall]) {
+    group = "deploy"
+    description = "Deploy the helm chart to your target cluster"
+}
+
+task "package"(dependsOn: [buildDockerImage, helmPackage]) {
+    group = "package"
+    description = "Creates all deliverable packages (docker and helm)"
+}
+
+task publish(dependsOn: [pushImages, helmPublish]) {
+    group = "publish"
+    description = "Publishes all packages (docker and helm)"
+}
+
+/**
+ * ADP uses a file VERSION_PREFIX to define the image versions.
+ * This method creates the file based on the version defined in gradle (file gradle.properties)
+ */
+def buildVersionFile() {
+    def versionFile = new File("VERSION_PREFIX")
+    versionFile.createNewFile()
+
+    versionFile.text = getReleaseVersion()
+}
+
+def getReleaseVersion() {
+    def snapshotPosition = project.version.indexOf("-")
+    snapshotPosition == -1 ? project.version : project.version.substring(0, snapshotPosition)
+}

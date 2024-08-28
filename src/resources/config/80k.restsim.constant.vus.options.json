@@ -1,0 +1,75 @@
+{
+  "scenarios": {
+    "CUDop": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 8,
+      "exec": "CUDop_80k"
+    },
+    "READop": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 8,
+      "exec": "READop_80k"
+    },
+    "SendBatchRequests": {
+      "executor": "constant-arrival-rate",
+      "duration": "1m",
+      "rate": 4,
+      "preAllocatedVUs": 20,
+      "timeUnit": "1s",
+      "exec": "batchReadCRUDOperation",
+      "env": {
+        "batchSize": "200",
+        "topicName": "k6-batch"
+      }
+    },
+    "QueryBatchResults": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "60m",
+      "exec": "queryBatchResultsTest",
+      "env": {
+        "kafkaReadTime": "180000",
+        "totalNumOfMessages": "30000",
+        "topicName": "k6-batch"
+      }
+    }
+  },
+  "thresholds": {
+    "time_between_first_request_and_event": [
+      "avg <= 8000"
+    ],
+    "kafka_propagation_time_in_seconds": [
+      "avg <= 200"
+    ],
+    "good_statusCode_percentage": [
+      "avg >= 20"
+    ],
+    "readOp": [
+      "avg <= 750"
+    ],
+    "updateOp": [
+      "avg <= 1350"
+    ],
+    "deleteOp": [
+      "avg <= 1350"
+    ],
+    "createOp": [
+      "avg <= 1750"
+    ]
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": [
+    "avg",
+    "min",
+    "med",
+    "max",
+    "p(90)",
+    "p(95)",
+    "p(99)",
+    "count"
+  ]
+}

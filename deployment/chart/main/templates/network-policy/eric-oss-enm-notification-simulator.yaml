@@ -1,0 +1,26 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "eric-oss-eas-app-engineering.name" . }}-eric-oss-enm-notification-simulator-limit-internal-traffic
+  labels:
+    chart: {{ template "eric-oss-eas-app-engineering.chart" . }}
+  {{- include "eric-oss-eas-app-engineering.kubernetes-io-info" .| nindent 4 }}
+  annotations:
+    {{- include "eric-oss-eas-app-engineering.helm-annotations" .| nindent 4 }}
+    {{- include "eric-oss-eas-app-engineering.product-info" .| nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: eric-oss-enm-notification-simulator-for-app-eng
+  ingress:
+    # ALLOW traffic from external clients
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: eric-oss-enm-notification-adapter
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: eric-eo-enm-adapter
+    - podSelector:
+        matchLabels:
+          app: eric-pm-server

@@ -1,0 +1,18 @@
+{
+    "scenarios": {
+        "CMEventsPerformance": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "85m",
+            "exec": "ENMEventPropagation",
+            "env": {}
+        }
+    },
+    "thresholds": {
+        "CMEventsPerformance": [
+            "count <= 90"
+        ]
+    },
+    "setupTimeout": "10m"
+}

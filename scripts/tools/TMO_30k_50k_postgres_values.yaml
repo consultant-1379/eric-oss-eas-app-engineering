@@ -1,0 +1,17 @@
+eric-oss-restsim-postgres:
+  enabled: true
+ 
+  resources:
+    postgres:
+      requests:
+        memory: "8Gi"
+        cpu: "2000m"
+        ephemeral-storage: "8Gi"
+      limits:
+        cpu: "16000m"
+        memory: "32Gi"
+        ephemeral-storage: "32Gi"
+ 
+  persistentVolumeClaim:
+    size: 64Gi
+    enabled: true

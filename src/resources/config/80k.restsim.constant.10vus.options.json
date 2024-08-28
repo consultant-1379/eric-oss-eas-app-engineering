@@ -1,0 +1,42 @@
+{
+  "scenarios": {
+    "CUDop": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "CUDop_80k"
+    },
+    "READop": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "READop_80k"
+    }
+  },
+  "thresholds": {
+    "readOp": [
+      "avg <= 750"
+    ],
+    "updateOp": [
+      "avg <= 1350"
+    ],
+    "deleteOp": [
+      "avg <= 1350"
+    ],
+    "createOp": [
+      "avg <= 1750"
+    ]
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": [
+    "avg",
+    "min",
+    "med",
+    "max",
+    "p(90)",
+    "p(95)",
+    "p(99)",
+    "count"
+  ]
+}

@@ -1,0 +1,58 @@
+{{- if .Values.env.RESTSIM_URL2 }}
+{{- if regexMatch ".*http://(.*).(.*).svc.*" .Values.env.RESTSIM_URL2 }}
+{{- $parts := split "." .Values.env.RESTSIM_URL2 }}
+{{- $namespace := $parts._1 }}
+{{- $applabel := $parts._0 | trimPrefix "http://" }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "eric-oss-eas-app-engineering.name" . }}-restsim-url2
+  namespace: {{ $namespace }}
+  labels:
+  {{- include "eric-oss-eas-app-engineering.kubernetes-io-info" .| nindent 4 }}
+  annotations:
+  {{- include "eric-oss-eas-app-engineering.helm-annotations" .| nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $applabel }}
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: eric-eo-enm-adapter
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: eric-oss-enm-connector
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: eric-pm-server
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: eric-oss-enm-notification-simulator-for-app-eng
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app: eas-k6
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .Release.Namespace }}
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: eric-oss-eas-app-engineering
+{{- end }}
+{{- end }}

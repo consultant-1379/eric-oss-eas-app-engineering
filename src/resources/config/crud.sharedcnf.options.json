@@ -1,0 +1,42 @@
+{
+  "scenarios": {
+    "CUDopSharedCNF": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "CUDop_SharedCNF"
+    },
+    "READopSharedCNF": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "READop_SharedCNF"
+    }
+  },
+  "thresholds": {
+    "readOpSharedCNF": [
+      "avg <= 750"
+    ],
+    "updateOpSharedCNF": [
+      "avg <= 1350"
+    ],
+    "deleteOpSharedCNF": [
+      "avg <= 1350"
+    ],
+    "createOpSharedCNF": [
+      "avg <= 1750"
+    ]
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": [
+    "avg",
+    "min",
+    "med",
+    "max",
+    "p(90)",
+    "p(95)",
+    "p(99)",
+    "count"
+  ]
+}

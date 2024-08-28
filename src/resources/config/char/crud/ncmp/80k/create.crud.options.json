@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "createOperation": {
+      "executor": "per-vu-iterations",
+      "vus": 20,
+      "iterations": 50,
+      "maxDuration": "80m",
+      "exec": "createCRUDOperation",
+      "env": {
+        "its": "50"
+      }
+    }
+  },
+  "thresholds": {
+    "createOperationSuccessful": [
+      "avg <= 1750"
+    ]
+  },
+  "setupTimeout": "10m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)", "count"]
+}

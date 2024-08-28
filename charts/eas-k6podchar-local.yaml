@@ -1,0 +1,331 @@
+# COPYRIGHT Ericsson 2021
+# The copyright to the computer program(s) herein is the property of
+# Ericsson Inc. The programs may be used and/or copied only with written
+# permission from Ericsson Inc. or in accordance with the terms and
+# conditions stipulated in the agreement/contract under which the
+# program(s) have been supplied.
+apiVersion: v1
+kind: Pod
+
+metadata:
+  name: eas-k6-testsuite
+  labels:
+    app: eas-k6
+    sidecar.istio.io/inject: 'true'
+  annotations:
+    proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+spec:
+  containers:
+    - name: eas-k6
+      env:
+        - name: THERE_IS_NO_TH_DEPL
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: TH_DISABLED
+        - name: GAS_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: GAS_HOST
+        - name: IAM_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: IAM_HOST
+        - name: NODETYPES
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: DISCOVERY_NODE_TYPES
+        - name: RESTSIM_URL1
+          value: ''
+        - name: RESTSIM_URL2
+          value: ''
+        - name: ENM_CERTS_DIR
+          value: '../enm_certs/'
+        - name: CHAR_TEST_TYPE
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: CHAR_TEST_TYPE
+        - name: ENM_HOSTNAME
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: ENM_HOSTNAME
+        - name: OPTIONS_FILE
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: OPTIONS_FILE
+        - name: USE_SEF
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: USE_SEF
+        - name: KAFKA_BOOTSTRAP_SERVER_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: KAFKA_BOOTSTRAP_SERVER_HOST
+        - name: KAFKA_BOOTSTRAP_SERVER_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: eas-k6-constants-configmap
+              key: KAFKA_BOOTSTRAP_SERVER_PORT
+        - name: SYS_USER
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user
+        - name: SYS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user-pwd
+      volumeMounts:
+        - name: eas-k6-main-volume
+          mountPath: '/tests'
+        - name: eas-k6-utility-volume
+          mountPath: '/tests/utility'
+        - name: eas-k6-functional-volume
+          mountPath: '/tests/use-cases/Functional'
+        - name: eas-k6-non-functional-volume
+          mountPath: '/tests/use-cases/Non-Functional'
+        - name: eas-k6-gat-volume
+          mountPath: '/tests/use-cases/GAT'
+        - name: eas-k6-characteristics-volume
+          mountPath: '/tests/use-cases/Characteristics'
+        - name: eas-k6-restsim-volume
+          mountPath: '/tests/resources/config/char/restsim'
+        - name: eas-k6-nightly-volume
+          mountPath: '/tests/resources/config/char/nightly'
+        - name: eas-k6-80k-volume
+          mountPath: '/tests/resources/config/char/80k'
+        - name: eas-k6-certs-volume
+          mountPath: '/tests/enm_certs'
+        - name: dir-for-reports
+          mountPath: '/reports'
+      image: armdocker.rnd.ericsson.se/proj-cerberus/k6-with-xk6:1.0.0
+      command: ['/bin/sh']
+      args: ['runK6EASChar.sh']
+      imagePullPolicy: Always
+      resources:
+        limits:
+          cpu: 2
+          memory: "2Gi"
+        requests:
+          cpu: 2
+          memory: "2Gi"
+      securityContext:
+        allowPrivilegeEscalation: true
+        runAsNonRoot: false
+        runAsUser: 0
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+  volumes:
+    - name: dir-for-reports
+    - name: eas-k6-restsim-volume
+      configMap:
+        name: eas-k6-restsim-configmap
+        items:
+          - key: 'restsim-opts-crud'
+            path: 'restsim.crud.options.json'
+          - key: 'restsim-opts-searches'
+            path: 'restsim.searches.options.json'
+          - key: 'restsim-opts-disco'
+            path: 'restsim.options.json'
+          - key: 'restsim-opts-dereg'
+            path: 'restsim.deregistration.options.json'
+          - key: 'restsim-opts-batch'
+            path: 'restsim.batch.options.json'
+    - name: eas-k6-nightly-volume
+      configMap:
+        name: eas-k6-nightly-configmap
+        items:
+          - key: 'nightly-opts-crud-1'
+            path: 'create.crud.options.json'
+          - key: 'nightly-opts-crud-2'
+            path: 'read.nrcell.crud.options.json'
+          - key: 'nightly-opts-crud-3'
+            path: 'read.dufunction.crud.options.json'
+          - key: 'nightly-opts-crud-4'
+            path: 'update.crud.options.json'
+          - key: 'nightly-opts-crud-5'
+            path: 'delete.crud.options.json'
+          - key: 'nightly-opts-crud'
+            path: 'nightly.crud.options.json'
+          - key: 'nightly-opts-disco'
+            path: 'nightly.options.json'
+          - key: 'nightly-opts-dereg'
+            path: 'nightly.deregistration.options.json'
+          - key: 'nightly-opts-events'
+            path: 'nightly.events.options.json'
+          - key: 'nightly-opts-batch'
+            path: 'nightly.batch.options.json'
+          - key: 'enm-opts-cleanup'
+            path: 'cleanup.crud.options.json'
+    - name: eas-k6-80k-volume
+      configMap:
+        name: eas-k6-80k-configmap
+        items:
+          - key: '80k-opts-crud-1'
+            path: 'create.crud.options.json'
+          - key: '80k-opts-crud-2'
+            path: 'read.nrcell.crud.options.json'
+          - key: '80k-opts-crud-3'
+            path: 'read.dufunction.crud.options.json'
+          - key: '80k-opts-crud-4'
+            path: 'update.crud.options.json'
+          - key: '80k-opts-crud-5'
+            path: 'delete.crud.options.json'
+          - key: '80k-opts-crud'
+            path: '80k.crud.options.json'
+          - key: '80k-opts-disco'
+            path: '80k.options.json'
+          - key: '80k-opts-batch'
+            path: '80k.batch.options.json'
+          - key: '80k-opts-searches'
+            path: '80k.searches.options.json'
+          - key: '80k-opts-dereg'
+            path: '80k.deregistration.options.json'
+          - key: 'enm-opts-cleanup'
+            path: 'cleanup.crud.options.json'
+    - name: eas-k6-certs-volume
+      configMap:
+        name: eas-k6-certs-configmap
+        items:
+          - key: 'cert-80k'
+            path: 'enmcnis-n297p1.sero.gic.ericsson.se.txt'
+          - key: 'cert-nightly'
+            path: 'stsossflexcenm2001-36598.stsoss.seli.gic.ericsson.se.txt'
+    - name: eas-k6-utility-volume
+      configMap:
+        name: eas-k6-utility-configmap
+        items:
+          - key: 'eas-const'
+            path: 'constants.js'
+          - key: 'eas-utility'
+            path: 'utility.js'
+          - key: 'eas-describe'
+            path: 'describe.js'
+          - key: 'eas-hash'
+            path: 'hash.js'
+          - key: 'eas-ajv'
+            path: 'ajv.js'
+          - key: 'eas-auth'
+            path: 'auth.js'
+          - key: 'eas-hash'
+            path: 'hash.js'
+          - key: 'eas-kafka'
+            path: 'kafka.js'
+    - name: eas-k6-main-volume
+      configMap:
+        name: eas-k6-main-configmap
+        items:
+          - key: 'eas-main'
+            path: 'main.js'
+          - key: 'char-main'
+            path: 'characteristicsTests.js'
+          - key: 'char-sh'
+            path: 'runK6EASChar.sh'
+    - name: eas-k6-functional-volume
+      configMap:
+        name: eas-k6-functional-configmap
+        items:
+          - key: 'eas-t4'
+            path: 'EAS_4.js'
+          - key: 'eas-t5'
+            path: 'EAS_5.js'
+          - key: 'eas-t6'
+            path: 'EAS_6.js'
+          - key: 'eas-t7'
+            path: 'EAS_7.js'
+          - key: 'eas-t8'
+            path: 'EAS_8.js'
+          - key: 'eas-t9'
+            path: 'EAS_9.js'
+          - key: 'eas-t10'
+            path: 'EAS_10.js'
+          - key: 'eas-t11'
+            path: 'EAS_11.js'
+          - key: 'eas-t12'
+            path: 'EAS_12.js'
+          - key: 'eas-t13'
+            path: 'EAS_13.js'
+          - key: 'eas-t14'
+            path: 'EAS_14.js'
+          - key: 'eas-t15'
+            path: 'EAS_15.js'
+          - key: 'eas-t16'
+            path: 'EAS_16.js'
+          - key: 'eas-t17'
+            path: 'EAS_17.js'
+          - key: 'eas-t18'
+            path: 'EAS_18.js'
+          - key: 'eas-t19'
+            path: 'EAS_19.js'
+          - key: 'eas-t20'
+            path: 'EAS_20.js'
+          - key: 'eas-events'
+            path: 'eventPolling.js'
+          - key: 'eas-events-restsim'
+            path: 'eventPolling_restsim.js'
+          - key: 'eas-ncmp-roles-test'
+            path: 'ncmpRolesTests.js'
+    - name: eas-k6-gat-volume
+      configMap:
+        name: eas-k6-gat-configmap
+        items:
+          - key: 'eas-gat-1'
+            path: 'Gat_3_1.js'
+          - key: 'eas-gat-2'
+            path: 'Gat_3_2.js'
+          - key: 'eas-gat-3'
+            path: 'Gat_3_3.js'
+          - key: 'eas-gat-4'
+            path: 'Gat_3_4.js'
+          - key: 'eas-gat-5'
+            path: 'Gat_3_5.js'
+          - key: 'eas-gat-cleanup'
+            path: 'Gat_Cleanup.js'
+    - name: eas-k6-non-functional-volume
+      configMap:
+        name: eas-k6-non-functional-configmap
+        items:
+          - key: 'crud-ops'
+            path: 'CRUDOperations.js'
+          - key: 'crud-base'
+            path: 'CRUDBase.js'
+          - key: 'eas-model-adapter-metrics'
+            path: 'ENMModelAdapterMetrics.js'
+          - key: 'eas-notif-adapter-metrics'
+            path: 'ENMNotificationAdapterMetrics.js'
+    - name: eas-k6-characteristics-volume
+      configMap:
+        name: eas-k6-characteristics-configmap
+        items:
+          - key: 'char-crud-ops'
+            path: 'CRUDOperationsChar.js'
+          - key: 'char-utils'
+            path: 'charutils.js'
+          - key: 'char-batch-flow'
+            path: 'batchFlow.js'
+          - key: 'char-crud-flow'
+            path: 'crudFlow.js'
+          - key: 'char-crud-enm-flow'
+            path: 'crudFlowENM.js'
+          - key: 'char-deregister-flow'
+            path: 'deregisterFlow.js'
+          - key: 'char-discovery-flow'
+            path: 'discoveryFlow.js'
+          - key: 'char-searches-flow'
+            path: 'searchesFlow.js'
+  dnsPolicy: ClusterFirst
+  imagePullSecrets:
+    - name: k8s-registry-secret
+  schedulerName: default-scheduler
+  restartPolicy: Never
+  securityContext: {}
+  terminationGracePeriodSeconds: 10

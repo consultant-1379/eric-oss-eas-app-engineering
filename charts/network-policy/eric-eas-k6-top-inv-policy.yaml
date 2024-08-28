@@ -1,0 +1,15 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: eric-eas-k6-top-inv-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: eric-oss-top-inv-exposure
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: eas-k6
+  policyTypes:
+    - Ingress

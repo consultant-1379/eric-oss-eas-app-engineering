@@ -1,0 +1,31 @@
+eric-oss-restsim-postgres:
+  enabled: true
+  podDisruptionBudget:
+    minAvailable: 0
+  highAvailability:
+    synchronousModeEnabled: true
+    replicaCount: 1
+  resources:
+    postgres:
+      requests:
+        memory: "8Gi"
+        cpu: "2000m"
+        ephemeral-storage: "8Gi"
+      limits:
+        cpu: "16000m"
+        memory: "64Gi"
+        ephemeral-storage: "64Gi"
+  persistentVolumeClaim:
+    size: 250Gi
+    enabled: true
+module: 'cm_edit::cm_events'
+notifications:
+  enabled: true
+admin_api:
+  enabled: true
+  cm_events: false
+LargeNetwork:
+  networkname: "NRM6_3_80k"
+ingress:
+  enabled: true
+  hostname: "restsim80k-hart146-eric-eic-4.hart146.rnd.gic.ericsson.se"

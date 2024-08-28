@@ -1,0 +1,126 @@
+{{- if $.Values.images.testwareImage.enabled }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: '{{ .Chart.Name }}'
+  labels:
+    {{- include "eric-oss-eas-app-engineering.labels" . | nindent 4 }}
+    sidecar.istio.io/inject: 'true'
+  annotations:
+    proxy.istio.io/config: '{ "holdApplicationUntilProxyStarts": true }'
+spec:
+  volumes:
+    - name: '{{ .Chart.Name }}-reports'
+      emptyDir: {}
+    - name: '{{ .Chart.Name }}-logs'
+      emptyDir: {}
+    - name: root-cert-volume
+      secret:
+        optional: true
+        secretName: eric-sec-sip-tls-trusted-root-cert
+    - name: kafka-cert-volume
+      secret:
+        optional: true
+        secretName: {{ include "eric-oss-eas-app-engineering.kafka-tls-secret" . | quote }}
+  containers:
+    - name: '{{ $.Chart.Name }}'
+      image: {{ $.Values.images.testwareImage.image | quote }}
+      env:
+        - name: 'APP_VERSION'
+          value: "{{ include "get-application-version" $ | trim | default "undefined" }}"
+        - name: 'BUILD_URL'
+          value: {{ $.Values.env.BUILD_URL }}
+        - name: 'STAGING_TYPE'
+          value: {{ $.Values.env.STAGING_TYPE }}
+        - name: 'PRODUCT'
+          value: {{ $.Values.env.PRODUCT }}
+        - name: 'PRODUCT_VERSION'
+          value: "{{ include "get-product-version" $ | trim | default "undefined" }}"
+        - name: 'ENVIRONMENT'
+          value: {{ $.Values.env.ENVIRONMENT }}
+        - name: 'OPTIONS_FILE'
+          value: '/resources/config/{{ $.Values.env.OPTIONS_FILE }}'
+        - name: 'TESTWARE_NAME'
+          value: {{ $.Values.env.TESTWARE_NAME }}
+        - name: 'MAIN_TEST_FILE'
+          value: '/tests/{{ $.Values.env.MAIN_TEST_FILE }}'
+        - name: 'GAS_HOST'
+          value: "{{ include "get-gas-host" $ | trim | default "undefined" }}"
+        - name: 'IAM_HOST'
+          value: "{{ include "get-iam-host" $ | trim | default "undefined" }}"
+        - name: 'GENERATE_RESPONSES'
+          value: "{{ $.Values.env.GENERATE_RESPONSES }}"
+        - name: 'GENERATED_QUANTITY'
+          value: "{{ $.Values.env.GENERATED_QUANTITY }}"
+        - name: 'NODETYPES'
+          value: "{{ $.Values.env.NODETYPES }}"
+        - name: 'RESTSIM_URL1'
+          value: {{ $.Values.env.RESTSIM_URL1 }}
+        - name: 'RESTSIM_URL2'
+          value: {{ $.Values.env.RESTSIM_URL2 }}
+        - name: 'ENM_HOSTNAME'
+          value: {{ $.Values.env.ENM_HOSTNAME | default "" }}
+        - name: 'ENM_CERTS_DIR'
+          value: {{ $.Values.env.ENM_CERTS_DIR }}
+        - name: 'CHAR_TEST_TYPE'
+          value: {{ $.Values.env.CHAR_TEST_TYPE | default "" }}
+        - name: KAFKA_BOOTSTRAP_SERVER_HOST
+          value: {{ index $.Values "messaging" "kafka" "bootstrapServer" "host" | quote }}
+        - name: KAFKA_BOOTSTRAP_SERVER_PORT
+          value: {{ include "eric-oss-eas-app-engineering.kafka-bootstrap-server-port" . | quote }}
+        - name: KAFKA_TLS_ENABLED
+          value: {{ include "eric-oss-eas-app-engineering.kafka-tls-enabled" . | quote }}
+        - name: SYS_USER
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user
+        - name: SYS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: eric-oss-common-base-system-user-secret
+              key: system-user-pwd
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: testware-resources-secret
+              key: database_url
+        - name: K6_TOOL_GUI_URL
+          valueFrom:
+            secretKeyRef:
+              name: testware-resources-secret
+              key: gui_url
+        - name: API_URL
+          valueFrom:
+            secretKeyRef:
+              name: testware-resources-secret
+              key: api_url
+        - name: USE_SEF
+          value: "{{ $.Values.env.USE_SEF }}"
+      volumeMounts:
+        - name: '{{ $.Chart.Name }}-reports'
+          mountPath: '/reports'
+        - name: '{{ .Chart.Name }}-logs'
+          mountPath: '/var/log'
+        - name: root-cert-volume
+          mountPath: /certs/eric-sec-sip-tls-trusted-root-cert
+          readOnly: true
+        - name: kafka-cert-volume
+          mountPath: /certs/kafka-cert
+          readOnly: true
+      imagePullPolicy: Always
+      resources: {}
+      securityContext:
+        allowPrivilegeEscalation: true
+        runAsNonRoot: false
+        runAsUser: 0
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+  dnsPolicy: ClusterFirst
+  imagePullSecrets:
+    - name: k8s-registry-secret
+  schedulerName: default-scheduler
+  restartPolicy: Never
+  securityContext: {}
+  terminationGracePeriodSeconds: 5
+ {{- end }}

@@ -1,0 +1,36 @@
+{
+  "scenarios": {
+    "SendBatchRequests": {
+      "executor": "constant-arrival-rate",
+      "duration": "1m",
+      "rate": 10,
+      "preAllocatedVUs": 20,
+      "timeUnit": "1s",
+      "exec": "batchReadCRUDOperation",
+      "env": {
+        "batchSize": "50",
+        "topicName": "k6-batch"
+      }
+    },
+    "QueryBatchResults": {
+      "executor": "per-vu-iterations",
+      "vus": 1,
+      "iterations": 1,
+      "maxDuration": "5m",
+      "exec": "queryBatchResultsTest",
+      "env": {
+        "kafkaReadTime": "180000",
+        "totalNumOfMessages": "30000",
+        "topicName": "k6-batch"
+      }
+    }
+  },
+  "thresholds": {
+    "readOperationSuccessful": [
+      "avg <= 750"
+    ]
+  },
+  "setupTimeout": "10m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)", "count"]
+}

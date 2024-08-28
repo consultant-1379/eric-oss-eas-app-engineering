@@ -1,0 +1,111 @@
+{
+    "scenarios": {
+        "cmHandleDiscoveryChar": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "cmHandleDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "gnbduTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "gnbduTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "nrcellTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "nrcellTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "nrsectorcarrierTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "nrsectorcarrierTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "gnbcuupTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "gnbcuupTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "gnbcucpTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "gnbcucpTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "enodebTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "enodebTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        },
+        "ltecellTopologyDiscovery": {
+            "executor": "per-vu-iterations",
+            "vus": 1,
+            "iterations": 1,
+            "maxDuration": "20m",
+            "exec": "ltecellTopologyDiscoveryChar",
+            "env": {
+                "topoTimeout" : "15"
+            }
+        }
+    },
+    "thresholds": {
+        "cmHandleDiscoveryChar": [
+            "count <= 15"
+        ],
+        "gnbduTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "nrcellTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "nrsectorcarrierTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "gnbcuupTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "gnbcucpTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "enodebTopologyDiscovery": [
+            "count <= 15"
+        ],
+        "ltecellTopologyDiscovery": [
+            "count <= 15"
+        ]
+    },
+    "setupTimeout": "10m"
+}

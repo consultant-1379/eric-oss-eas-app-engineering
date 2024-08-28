@@ -1,0 +1,31 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ template "eric-oss-eas-app-engineering.name" . }}-restsim-limit-internal-traffic
+  labels:
+    chart: {{ template "eric-oss-eas-app-engineering.chart" . }}
+  {{- include "eric-oss-eas-app-engineering.kubernetes-io-info" .| nindent 4 }}
+  annotations:
+  {{- include "eric-oss-eas-app-engineering.helm-annotations" .| nindent 4 }}
+  {{- include "eric-oss-eas-app-engineering.product-info" .| nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+      app: eric-oss-restsim-release-for-app-eng
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: eric-eo-enm-adapter
+    - podSelector:
+        matchLabels:
+          app: eric-oss-enm-connector
+    - podSelector:
+        matchLabels:
+          app: eric-oss-enm-notification-simulator-for-app-eng
+    - podSelector:
+        matchLabels:
+          app: eric-pm-server
+  - ports:
+    - port: 8080
+    - port: 8081

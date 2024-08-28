@@ -1,0 +1,28 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: eric-eas-k6-restsim-policy-for-app-eng
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: eric-oss-restsim-release-for-app-eng
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: eas-k6
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: eric-oss-eas-app-engineering
+        - podSelector:
+            matchLabels:
+              app: eric-pm-server
+        - podSelector:
+            matchLabels:
+              app: eric-eo-enm-adapter
+        - podSelector:
+            matchLabels:
+              app: eric-oss-enm-connector
+        - podSelector:
+            matchLabels:
+              app: eric-oss-enm-notification-adapter

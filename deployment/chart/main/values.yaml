@@ -1,0 +1,57 @@
+replicaCount: 1
+
+images:
+  testwareImage:
+    enabled: true
+    image: ${defaultDockerTag}
+
+build:
+  version: ${version}
+  name: ${name}
+
+env:
+  APP_VERSION: ''
+  BUILD_URL: 'anything'
+  STAGING_TYPE: 'APPLICATION'
+  PRODUCT: ''
+  PRODUCT_VERSION: ''
+  ENVIRONMENT: 'production'
+  OPTIONS_FILE: 'default.options.json'
+  TESTWARE_NAME: ${name}
+  MAIN_TEST_FILE: 'main.js'
+  GENERATE_RESPONSES: false
+  GENERATED_QUANTITY: 100
+  NODETYPES: 'RadioNode__Shared-CNF'
+  RESTSIM_URL1: ''
+  RESTSIM_URL2: ''
+  ENM_HOSTNAME: 'stsossflexcenm2001-36598.stsoss.seli.gic.ericsson.se'
+  ENM_CERTS_DIR: '/enm_certs/'
+  CHAR_TEST_TYPE: 'nightly'
+  USE_SEF: true
+
+global:
+  pullSecret: 'k8s-registry-secret'
+messaging:
+  kafka:
+    tls:
+      enabled: true
+    bootstrapServer:
+      host: eric-oss-dmm-kf-op-sz-kafka-bootstrap
+      port: 9092
+      tlsPort: 9093
+eric-eo-enm-stub-for-app-eng:
+  enabled: true
+  logging:
+    format:
+      json: true
+eric-oss-restsim-release-for-app-eng:
+  enabled: true
+  logging:
+    format:
+      json: true
+  eric-oss-restsim-postgres:
+    persistentVolumeClaim:
+      enabled: false
+  module: 'cm_edit::cm_events'
+  notifications:
+    enabled: true

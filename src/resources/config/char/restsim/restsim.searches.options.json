@@ -1,0 +1,87 @@
+{
+  "scenarios": {
+    "idSearchPublicProperty": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "idSearchPublicPropertyFlow",
+      "env": {
+        "its": "1"
+      }
+    },
+    "idSearchModuleProperty": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "idSearchModulePropertyFlow",
+      "env": {
+        "its": "1"
+      }
+    },
+    "idSearchWithoutFilter": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "idSearchWithoutFilterFlow",
+      "env": {
+        "its": "1"
+      }
+    },
+    "searchPublicProperty": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "searchPublicPropertyFlow",
+      "env": {
+        "its": "1"
+      }
+    },
+    "searchModuleProperty": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "searchModulePropertyFlow",
+      "env": {
+        "its": "1"
+      }
+    },
+    "searchWithoutFilter": {
+      "executor": "per-vu-iterations",
+      "vus": 5,
+      "iterations": 1,
+      "maxDuration": "10m",
+      "exec": "searchWithoutFilterFlow",
+      "env": {
+        "its": "1"
+      }
+    }
+  },
+  "thresholds": {
+    "idSearchPublicPropertySuccessful": [
+      "avg <= 75000"
+    ],
+    "idSearchModulePropertySuccessful": [
+      "avg <= 75000"
+    ],
+    "idSearchWithoutFilterSuccessful": [
+      "avg <= 75000"
+    ],
+    "searchPublicPropertySuccessful": [
+      "avg <= 75000"
+    ],
+    "searchModulePropertySuccessful": [
+      "avg <= 75000"
+    ],
+    "searchWithoutFilterSuccessful": [
+      "avg <= 75000"
+    ]
+  },
+  "setupTimeout": "10m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)", "count"]
+}

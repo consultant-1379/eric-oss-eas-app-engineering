@@ -1,0 +1,1 @@
+helm install restsim-80k-a eric-oss-restsim-release-1.0.0-139.tgz -n hart146-eric-eic-3 --set LargeNetwork.networkname=NRM6_3_80k --values 80k-postgres-values.yaml

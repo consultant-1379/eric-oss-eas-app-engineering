@@ -1,0 +1,22 @@
+{
+  "scenarios": {
+    "CUDop": {
+      "executor": "per-vu-iterations",
+      "vus": 10,
+      "iterations": 260,
+      "startTime": "30s",
+      "maxDuration": "20m",
+      "exec": "CUDop_80k"
+    },
+    "READop": {
+      "executor": "per-vu-iterations",
+      "vus": 10,
+      "iterations": 1500,
+      "startTime": "30s",
+      "maxDuration": "20m",
+      "exec": "READop_80k"
+    }
+  },
+  "setupTimeout": "20m",
+  "teardownTimeout": "10m"
+}

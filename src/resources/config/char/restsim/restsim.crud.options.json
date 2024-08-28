@@ -1,0 +1,41 @@
+{
+  "scenarios": {
+    "CRUDMeasurementsRead": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "CRUDMeasurements",
+      "env": {
+        "operationType": "read",
+        "requestType": "nrcell"
+      }
+    },
+    "CRUDMeasurementsWrite": {
+      "executor": "constant-vus",
+      "duration": "10m",
+      "vus": 10,
+      "exec": "CRUDMeasurements",
+      "env": {
+        "operationType": "write",
+        "requestType": "nrcell"
+      }
+    }
+  },
+  "thresholds": {
+    "createOperationSuccessful": [
+      "avg <= 1750"
+    ],
+    "readOperationSuccessful": [
+      "avg <= 1000"
+    ],
+    "updateOperationSuccessful": [
+      "avg <= 1500"
+    ],
+    "deleteOperationSuccessful": [
+      "avg <= 1500"
+    ]
+  },
+  "setupTimeout": "30m",
+  "teardownTimeout": "10m",
+  "summaryTrendStats": ["avg", "min", "med", "max", "p(90)", "p(95)", "p(99)", "count"]
+}

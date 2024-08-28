@@ -1,0 +1,15 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "eric-oss-eas-app-engineering.name" . }}-sef-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: eric-sef-exposure-api-manager
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: {{ include "eric-oss-eas-app-engineering.name" . }}
+  policyTypes:
+    - Ingress
